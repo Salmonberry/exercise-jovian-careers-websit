@@ -1,0 +1,56 @@
+
+  header>h1 {
+  font-size: 100px;
+  font-family: 'Segoe UI';
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+body {
+  background-color: lightcyan;
+}
+
+body .container{
+  margin: 0 auto;
+}
+
+body h2{
+  text-align: center;
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium';
+  color: gray;
+}
+
+body .centered-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 80%;
+        }
+
+h1 {
+  color: black;
+  text-align: center;
+}
+
+body p {
+  font-family: 'Franklin Gothic Medium';
+  color: gray;
+  font-size: 20px;
+}
+
+body ul li {
+  font-family: 'Courier New';
+  color: gray;
+  font-size: 20px;
+}
+
+footer p {
+  font-size: 12px; 
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  padding: 10px;
+}
