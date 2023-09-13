@@ -2,17 +2,14 @@
   header>h1 {
   font-size: 100px;
   font-family: 'Segoe UI';
-  padding-top: 20px;
-  padding-bottom: 20px;
+  /* padding-top: 20px; */
+  /* padding-bottom: 20px; */
 }
 
 body {
   background-color: lightcyan;
 }
 
-body .container{
-  margin: 0 auto;
-}
 
 body h2{
   text-align: center;
