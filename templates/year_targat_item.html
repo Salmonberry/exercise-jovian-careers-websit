@@ -1,0 +1,10 @@
+              <div class="list-group-item list-group-item-primary">
+                <b>{{item['id']}} 计划项目：</b>
+                {% if item['id']==0 %}
+                  <b></b>
+                {% endif %}
+                {{item['title']}}
+              </div>
+            <div class="list-group-item list-group-item-secondary">
+                <b>实践目标：</b>{{item['target']}}
+              </div>      

@@ -15,7 +15,7 @@
 <body>
     <div class="container">
         <header>
-          <h1 class="py-4">My Blog</h1>
+          <h1 class="py-4">{{data.title}}</h1>
             <img class="img-thumbnail" src="https://act.hoyoverse.com/puzzle/hk4e/pz_qU_XDEsGGe/resource/puzzle/upload/puzzle/2023/08/03/4571db40a756970f0af4be1266e129c2_4738540530039281587.png?x-oss-process=image/format,webp/quality,Q_90" alt="" srcset="">
         </header>
 
@@ -28,11 +28,11 @@
           </p>
           <p class="pt-5"></p>
           <h2>今年计划</h2>
-          <ul class="list-group pt-4">
-            <li class="list-group-item list-group-item-primary">Unity游戏开发</li>
-            <li class="list-group-item list-group-item-secondary">Blender模型建模</li>
-            <li class="list-group-item list-group-item-success">软件设计模式</li>
-          </ul>
+          <div class="list-group pt-4">
+            {%for item in data.year_target %}
+               {% include 'year_targat_item.html'%}
+            {%endfor%}
+          </div>
         </section>
         <footer>
             <p>Copyright 2023,Salmon</p>
