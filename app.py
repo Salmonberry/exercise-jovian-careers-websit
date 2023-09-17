@@ -1,6 +1,5 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template,jsonify
 from database import  get_year_target
-
 
 app = Flask(__name__)
 
