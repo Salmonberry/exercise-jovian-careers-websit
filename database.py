@@ -14,7 +14,7 @@ def get_year_target():
   result_dicts = []
   
   with engine.connect() as conn:
-    result = conn.execute(text("select * from yerar_targets"))
+    result = conn.execute(text("select * from yerar_target_list"))
 
   for row in result.all():
     result_dicts.append(row._asdict())
