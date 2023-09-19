@@ -1,13 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <title>Salmon's Blog</title>
 </head>
+
 <body>
-  
+  <div class="container pt-3">
+    <header class="text-center fs-1 border-bottom pb-3 fw-bolder">{{data.title}}</header>
+  </div>
+  <div class="p-5 text-center">
+    <img  src={{data.image_url}} alt="">
+    <div class="fs-5 mt-5 fw-semibold text-start">
+      {{data.description}}    </div>
+    <ul class="mt-5 mb-5 fw-medium text-start">
+      <ol class="mb-3">{{data.key_point_01}}</ol>
+      <ol class="mb-3">{{data.key_point_02}}</ol>
+      <ol class="mb-3">{{data.key_point_03}}</ol>
+      <ol class="mb-3">{{data.key_point_04}}</ol>
+      <ol class="mb-3">{{data.key_point_05}}</ol>
+      <ol class="mb-3">{{data.key_point_06}}</ol>
+      <ol class="mb-3">{{data.key_point_07}}</ol>
+      <ol class="mb-3">{{data.key_point_08}}</ol>
+      <ol class="mb-3">{{data.key_point_09}}</ol>
+      <ol class="mb-3">{{data.key_point_10}}</ol>
+      <ol class="mb-3">{{data.key_point_11}}</ol>
+      <ol class="mb-3">{{data.key_point_12}}</ol>
+    </ul>
+    <div class="text-start fs-5 fw-semibold">{{data.summary}}</div>
+  </div>
 </body>
+
 </html>

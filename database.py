@@ -14,10 +14,26 @@ def get_year_target():
   result_dicts = []
   
   with engine.connect() as conn:
-    result = conn.execute(text("select * from yerar_target_list"))
+    result = conn.execute(text("select * from year_target_list"))
 
   for row in result.all():
     result_dicts.append(row._asdict())
 
   return result_dicts
+
+def get_year_target_by_id(id):
+  result_dicts = []
+  with engine.connect() as conn:
+    result = conn.execute(
+       text("SELECT * FROM year_target_detail")
+    )
+    
+  for row in result.all():
+    result_dicts.append(row._asdict())
+
+  obj=result_dicts[id-1]
+  print(obj)
+    
+  
+  return obj
 
