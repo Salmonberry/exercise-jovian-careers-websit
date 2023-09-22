@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy import text
 import os
+import json
 
 my_secret = os.environ['DB_CONNECTION_STR']
 db_connection_string = my_secret
@@ -10,7 +11,7 @@ engine = create_engine(db_connection_string,
                          "ssl_ca": "/etc/ssl/cert.pem"
                        }})
 
-def get_year_target():
+def get_year_target_list():
   result_dicts = []
   
   with engine.connect() as conn:
@@ -22,18 +23,62 @@ def get_year_target():
   return result_dicts
 
 def get_year_target_by_id(id):
-  result_dicts = []
+  # result_dicts = []
   with engine.connect() as conn:
     result = conn.execute(
-       text("SELECT * FROM year_target_detail")
+       text("SELECT * FROM year_target_detail WHERE id = :target_id"),
+      {"target_id": id}
     )
-    
-  for row in result.all():
-    result_dicts.append(row._asdict())
 
-  obj=result_dicts[id-1]
-  print(obj)
+  #获取查询结果的第一行
+  row=result.fetchone()
+
+  # print(row)
+
+  target=None
     
+  if row: 
+    target= row._asdict()
+
+    # mysql 直接返回的array为 array string json 需要转为python对象
+    key_points_string= target.get("key_point_list")
+    # print(key_points_string) 
+    # print("type(key_points_string)",type(key_points_string))
+    # 将string list json转为python的list 对象
+    data=json.loads(key_points_string)
+    # print(data)
+    # print("type(data)",type(data))
+    target["key_point_list"]=data
   
-  return obj
+  return target
+
+def get_year_target_by_title(title):
+  # result_dicts = []
+  with engine.connect() as conn:
+    result = conn.execute(
+       text("SELECT * FROM year_target_detail WHERE title = :target_title"),
+      {"target_title": title}
+    )
+
+  #获取查询结果的第一行
+  row=result.fetchone()
+
+  # print(row)
+
+  target=None
+    
+  if row: 
+    target= row._asdict()
+
+    # mysql 直接返回的array为 array string json 需要转为python对象
+    key_points_string= target.get("key_point_list")
+    # print(key_points_string) 
+    # print("type(key_points_string)",type(key_points_string))
+    # 将string list json转为python的list 对象
+    data=json.loads(key_points_string)
+    # print(data)
+    # print("type(data)",type(data))
+    target["key_point_list"]=data
+  
+  return target
 

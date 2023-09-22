@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="target_search_header text-center py-4" style="border-bottom: 1px solid #ddd; padding-bottom: 15px;">
+    <h1>Target Search</h1>
+  </div>
+
+  <div class="container text-center py-5">
+    <form id="target_search_form">
+      <div class="input-group input-group-lg  mb-3" ">
+        <input 
+        type=" text" 
+        class="form-control" 
+        placeholder="target title" 
+        name="target_title"
+        id="target_title"  
+        >
+        <button class="btn btn-outline-secondary" type="submit" value="dd">Search</button>
+      </div>
+    </form>
+    
+      <div class="target_search_results text-start" id="target_search_results">
+      </div>
+  </div>
+</body>
+  <script>
+    $(document).ready(function(){
+      $('#target_search_form').submit(function(e){
+        e.preventDefault()
+
+        var target_title = $('input[name="target_title"]').val();
+
+        $.ajax({
+          type:'GET',
+          url:"https://exercise-jovian-careers-websit--salmonpj.repl.co/api/v1/target/target_search",
+          data:{target_title:target_title},
+          dataType:'json',
+          success:function(data){
+            console.log(data);
+                console.log($('#target_search_results'));
+
+                // 创建一个 ul 元素
+                var ul = $('<ul>').addClass('list-group');
+
+                // 创建 li 元素并添加数据
+                var titleLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center')
+                                       .text(data['title'])
+                                       .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
+                var descriptionLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center')
+                                             .text(data['description'])
+                                             .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
+                var imageUrlLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center disabled')
+                                         .text(data['image_url'])
+                                         .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
+                var keyPointsUl = $('<ul>');
+                for (let item of data['key_point_list']) {
+                    keyPointsUl.append($('<li>').text(item));
+                }
+                var keyPointsLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center disabled')
+                                           .append(keyPointsUl)
+                                           .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
+                var summaryLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center disabled')
+                                        .text(data['summary'])
+                                        .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
+
+                // 将 li 元素添加到 ul 元素中
+                ul.append(titleLi, descriptionLi, imageUrlLi, keyPointsLi, summaryLi);
+
+                // 将 ul 元素插入到目标元素中
+                $('#target_search_results').html(ul);
+
+          }
+
+        })
+    })})
+  </script>
+</html>
