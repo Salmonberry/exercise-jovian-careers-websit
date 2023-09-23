@@ -63,7 +63,7 @@ def add_target_by_name():
   data = request.get_json();
   print(data)
   
-  return jsonify();
+  return jsonify(data);
   # if data is not None:
   #   title=
   

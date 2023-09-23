@@ -18,7 +18,7 @@
       <div class="row mb-3">
         <label for="inputEmail3" class="col-sm-2 col-form-label">title</label>
         <div class="col-sm-10">
-          <input type="email" class="form-control" id="inputEmail3">
+          <input type="text" class="form-control" id="inputEmail3" name="target_title">
         </div>
       </div>
 
@@ -30,12 +30,11 @@
 
       <!-- description -->
       <div class="form-floating mb-5">
-        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" name="target_description"></textarea>
         <label for="floatingTextarea2">Comments</label>
       </div>
 
       <!-- key point list -->
-      <!-- todo: dynamic add point input text -->
       <div class=".container pt-3" style="background-color: red;">
 
         <div class="point_list" id="point_list">
@@ -54,11 +53,11 @@
 
       <!-- summary -->
       <div class="form-floating mb-5">
-        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" name="target_summary"></textarea>
         <label for="floatingTextarea2">Comments</label>
       </div>
       <div class="row mb-3 mt-5">
-        <button type="button" class="btn btn-secondary btn-lg">Large button</button>
+        <button type="submit" class="btn btn-secondary btn-lg">Large button</button>
       </div>
     </form>
     <div class="target_add_results text-start" id="target_add_results">
@@ -70,80 +69,111 @@
 <script>
   $(document).ready(function() {
 
-    $('#AddPointButton').click(function(e){
-      // e.preventDefault()
+    // 定义一个函数来生成 "key point" 输入框的 HTML 模板
+    function getKeyPointTemplate() {
+      return `
+    <div class="row pb-3 border-bottom border-dark">
+      <label for="inputEmail3" class="col-sm-2 col-form-label">key point</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="inputEmail3" name="key_point">
+      </div>
+    </div>
+    `;
+    }
 
-      console.log("ddddd")
+    // 定义一个函数来添加 "key point" 输入框
+    function addKeyPointInput() {
+      var point_list = $('#point_list');
+      var htmlTemplate = getKeyPointTemplate(); // 获取模板字符串
+      point_list.append(htmlTemplate); // 使用模板字符串创建新元素并添加到 point_list 中
+    }
 
-      var point_list=$('#point_list')
+    // 添加 "key point" 输入框事件处理
+    $('#AddPointButton').click(function(e) {
+      addKeyPointInput();
+    });
 
-      // 创建包含HTML代码的jQuery对象
-      var newElement = $(
-      '<div class="row pb-3 border-bottom border-dark">' +
-        '<label for="inputEmail3" class="col-sm-2 col-form-label">key point</label>' +
-        '<div class="col-sm-10">' +
-          '<input type="email" class="form-control" id="inputEmail3">' +
-          '</div>' +
-        '</div>'
-      );
+    // 定义一个通用的校验函数，接受字段名称和字段值作为参数
+    function validateField(fieldName, fieldValue) {
+      // 去除前导和尾随空格后校验是否为空或空字符
+      if (fieldValue.trim() === '') {
+        alert(fieldName + '不能为空');
+        // 进一步处理空值的逻辑，例如阻止提交等
+        return false; // 校验不通过
+      }
+      return true; // 校验通过
+    }
 
-      // 将新创建的元素添加为point_list的子元素
-      point_list.append(newElement);
+    // 校验目标标题
+    if (!validateField('目标标题', target_title)) {
+      // 处理校验不通过的情况
+    }
 
+    // 校验目标描述
+    if (!validateField('目标描述', target_description)) {
+      // 处理校验不通过的情况
+    }
 
+    // 校验目标摘要
+    if (!validateField('目标摘要', target_summary)) {
+      // 处理校验不通过的情况
+    }
 
+    // 校验关键点
+    var keyPoints = $('input[name="key_point"]').map(function() {
+      return $(this).val();
+    }).get();
+
+    var areKeyPointsEmpty = keyPoints.some(function(point) {
+      return !validateField('关键点', point);
+    });
+
+    if (areKeyPointsEmpty) {
+      // 处理校验不通过的情况
+    }
+
+    $('#AddPointButton').click(function(e) {
+      addKeyPointInput();
     })
 
     $('#target_add_form').submit(function(e) {
       e.preventDefault()
+      console.log("dddd")
 
+      
       var target_title = $('input[name="target_title"]').val();
+      var target_image = $('input[type="file"]').val();
+      var target_description = $('textarea[name="target_description').val();
+      var target_summary = $('textarea[name="target_summary"]').val();
+      
+
+      // 选择所有带有 name="key_point" 的 input 元素
+      var keyPoints = $('input[name="key_point"]').map(function() {
+        return $(this).val();
+      }).get();
 
       $.ajax({
-        type: 'GET',
-        url: "https://exercise-jovian-careers-websit--salmonpj.repl.co/api/v1/target/target_search",
+        type: 'POST',
+        url: "https://exercise-jovian-careers-websit--salmonpj.repl.co/api/v1/target/target_add",
         data: {
-          target_title: target_title
+          target_title: target_title,
+          target_image: target_image,
+          target_description: target_description,
+          target_key_points: keyPoints,
+          target_summary: target_summary,
         },
         dataType: 'json',
+        beforeSend: function() {
+          // 在发送请求之前执行的操作
+          console.log("即将发送的JSON数据：", JSON.stringify(xhr.data));
+        },
         success: function(data) {
           console.log(data);
-          console.log($('#target_search_results'));
-
-          // 创建一个 ul 元素
-          var ul = $('<ul>').addClass('list-group');
-
-          // 创建 li 元素并添加数据
-          var titleLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center')
-            .text(data['title'])
-            .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
-          var descriptionLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center')
-            .text(data['description'])
-            .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
-          var imageUrlLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center disabled')
-            .text(data['image_url'])
-            .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
-          var keyPointsUl = $('<ul>');
-          for (let item of data['key_point_list']) {
-            keyPointsUl.append($('<li>').text(item));
-          }
-          var keyPointsLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center disabled')
-            .append(keyPointsUl)
-            .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
-          var summaryLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center disabled')
-            .text(data['summary'])
-            .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
-
-          // 将 li 元素添加到 ul 元素中
-          ul.append(titleLi, descriptionLi, imageUrlLi, keyPointsLi, summaryLi);
-
-          // 将 ul 元素插入到目标元素中
-          $('#target_search_results').html(ul);
-
         }
 
       })
     })
+
   })
 </script>
 
