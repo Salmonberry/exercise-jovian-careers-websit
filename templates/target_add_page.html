@@ -93,54 +93,9 @@
       addKeyPointInput();
     });
 
-    // // 定义一个通用的校验函数，接受字段名称和字段值作为参数
-    // function validateField(fieldName, fieldValue) {
-    //   // 去除前导和尾随空格后校验是否为空或空字符
-    //   if (fieldValue.trim() === '') {
-    //     alert(fieldName + '不能为空');
-    //     // 进一步处理空值的逻辑，例如阻止提交等
-    //     return false; // 校验不通过
-    //   }
-    //   return true; // 校验通过
-    // }
-
-    // // 校验目标标题
-    // if (!validateField('目标标题', target_title)) {
-    //   // 处理校验不通过的情况
-    // }
-
-    // // 校验目标描述
-    // if (!validateField('目标描述', target_description)) {
-    //   // 处理校验不通过的情况
-    // }
-
-    // // 校验目标摘要
-    // if (!validateField('目标摘要', target_summary)) {
-    //   // 处理校验不通过的情况
-    // }
-
-    // // 校验关键点
-    // var keyPoints = $('input[name="key_point"]').map(function() {
-    //   return $(this).val();
-    // }).get();
-
-    // var areKeyPointsEmpty = keyPoints.some(function(point) {
-    //   return !validateField('关键点', point);
-    // });
-
-    // if (areKeyPointsEmpty) {
-    //   // 处理校验不通过的情况
-    // }
-
-    $('#AddPointButton').click(function(e) {
-      addKeyPointInput();
-    })
-
     $('#target_add_form').submit(function(e) {
       e.preventDefault()
-      console.log("dddd")
-
-      
+            
       var target_title = $('input[name="target_title"]').val();
       var target_image = $('input[type="file"]').val();
       var target_description = $('textarea[name="target_description').val();
