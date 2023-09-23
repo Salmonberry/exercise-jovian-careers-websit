@@ -95,7 +95,7 @@
 
     $('#target_add_form').submit(function(e) {
       e.preventDefault()
-            
+
       var target_title = $('input[name="target_title"]').val();
       var target_image = $('input[type="file"]').val();
       var target_description = $('textarea[name="target_description').val();
@@ -118,7 +118,7 @@
           target_summary: target_summary,
         },
         dataType: 'json',
-        beforeSend: function() {
+        beforeSend: function(xhr) {
           // 在发送请求之前执行的操作
           console.log("即将发送的JSON数据：", JSON.stringify(xhr.data));
         },
