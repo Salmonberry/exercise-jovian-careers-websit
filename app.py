@@ -28,6 +28,10 @@ def to_target_detail_page(target_id):
 def to_target_search_page():
   return render_template('target_search_page.html')
 
+@app.route("/target/target_add_page",methods=["GET"])
+def to_add_target_page():
+  return render_template('target_add_page.html')
+
 
 @app.route(f"{baseurl}/year_target_list", methods=["GET"])
 def year_target_list():
@@ -52,6 +56,17 @@ def get_target_by_name():
 
   else:
     return "Input string is empty"
+
+
+@app.route(f"{baseurl}/target/target_add", methods=["POST"])
+def add_target_by_name():
+  data = request.get_json();
+  print(data)
+  
+  return jsonify();
+  # if data is not None:
+  #   title=
+  
 
 
 @app.errorhandler(404)
