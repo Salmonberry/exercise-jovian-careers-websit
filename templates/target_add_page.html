@@ -100,35 +100,41 @@
       var target_image = $('input[type="file"]').val();
       var target_description = $('textarea[name="target_description').val();
       var target_summary = $('textarea[name="target_summary"]').val();
-      
+
 
       // 选择所有带有 name="key_point" 的 input 元素
       var keyPoints = $('input[name="key_point"]').map(function() {
         return $(this).val();
       }).get();
 
+      var dataToSend = {
+        // target_title: target_title,
+        // target_image: target_image,
+        // target_description: target_description,
+        // target_key_points: keyPoints,
+        target_summary: target_summary,
+      };
+
       $.ajax({
         type: 'POST',
         url: "https://exercise-jovian-careers-websit--salmonpj.repl.co/api/v1/target/target_add",
-        data: {
-          // target_title: target_title,
-          // target_image: target_image,
-          // target_description: target_description,
-          // target_key_points: keyPoints,
-          target_summary: target_summary,
-        },
+        data: JSON.stringify(dataToSend),
+        contentType: "application/json", // 指定请求的内容类型为 JSON
         dataType: 'json',
         beforeSend: function(xhr) {
           // 在发送请求之前执行的操作
           console.log("即将发送的JSON数据：", JSON.stringify(xhr.data));
         },
-        success: function(data) {
-          console.log(data);
-        },
-        error: function(err) {
-          console.error("请求失败:", err);
-        }
+        success: function(response) {
+          // 请求成功的回调函数
+          console.log("服务器响应数据:", response);
 
+          // 在这里处理服务器返回的数据
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          // 请求失败的回调函数
+          console.error("请求失败:", textStatus, errorThrown);
+        }
       })
     })
 
