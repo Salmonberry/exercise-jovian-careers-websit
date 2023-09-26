@@ -1,7 +1,9 @@
-from flask import Flask, render_template, jsonify, abort, request
+from flask import Flask, render_template, jsonify, abort, request,send_from_directory
 from database import get_year_target_list
-from database import get_year_target_by_id
+from database import get_year_detail_target_by_id
 from database import get_year_target_by_title
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 
@@ -9,15 +11,18 @@ data = get_year_target_list()
 
 baseurl = '/api/v1'
 
+UPLOAD_FOLDER='uploads'
+app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
+
 
 @app.route("/")
 def to_home_page():
-  return render_template('home_page.html', data=data)
+  return render_template('index.html', data=data)
 
 
 @app.route("/target/<int:target_id>", methods=["GET"])
 def to_target_detail_page(target_id):
-  data = get_year_target_by_id(id=target_id)
+  data = get_year_detail_target_by_id(id=target_id)
 
   if not data: abort(404)
 
@@ -38,13 +43,13 @@ def year_target_list():
   return jsonify(data)
 
 
-@app.route(f"{baseurl}/year_target/<int:target_id>", methods=["GET"])
+@app.route(f"{baseurl}/year_target_detail_list/<int:target_id>", methods=["GET"])
 def year_target(target_id):
-  data = get_year_target_by_id(id=target_id)
+  data = get_year_detail_target_by_id(id=target_id)
   return jsonify(data)
 
 
-@app.route(f"{baseurl}/target/target_search", methods=["GET"])
+@app.route(f"{baseurl}/year_target_detail_list", methods=["GET"])
 def get_target_by_name():
   target_title = request.args.get('target_title')
 
@@ -58,16 +63,39 @@ def get_target_by_name():
     return "Input string is empty"
 
 
-@app.route(f"{baseurl}/target/target_add", methods=["POST"])
+@app.route(f"{baseurl}/year_target_detail_list", methods=["POST"])
 def add_target_by_name():
   data = request.get_json();
-  print(data)
+  # print(data)
   
   return jsonify(data);
   # if data is not None:
   #   title=
   
+@app.route(f"{baseurl}/uploads", methods=["POST"])
+def uploaded_image():
+  try:
+    upload_file=request.files['image']
+    if upload_file.filename !='':
+      import datetime
+      timestamp=datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+      filename=timestamp+'_'+secure_filename(upload_file.filename)
+      upload_file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))      
 
+      print(upload_file)
+      base_url=request.url_root
+      image_url=base_url+'uploads/'+filename
+
+      return jsonify({'message': 'Image uploaded successfully ', 'image_url': image_url})
+    else:
+      return jsonify({'message': 'No file selected'})
+  except Exception as e:
+        return jsonify({'message': 'Error: ' + str(e)})
+
+# 添加一个路由用于访问上传的图片
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.errorhandler(404)
 def not_found_error(error):

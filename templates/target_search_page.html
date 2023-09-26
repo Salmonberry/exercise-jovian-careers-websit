@@ -9,6 +9,7 @@
 </head>
 
 <body>
+  {% include 'home_nav.html'%}
   <div class="target_search_header text-center py-4" style="border-bottom: 1px solid #ddd; padding-bottom: 15px;">
     <h1>Target Search</h1>
   </div>
@@ -40,7 +41,7 @@
 
         $.ajax({
           type:'GET',
-          url:"https://exercise-jovian-careers-websit--salmonpj.repl.co/api/v1/target/target_search",
+          url:"https://exercise-jovian-careers-websit--salmonpj.repl.co/api/v1/year_target_detail_list",
           data:{target_title:target_title},
           dataType:'json',
           success:function(data){

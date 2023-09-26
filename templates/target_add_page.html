@@ -8,24 +8,29 @@
 </head>
 
 <body style="background-color: aqua;">
+  {% include 'home_nav.html'%}
   <div class="target_add_header text-center py-4" style="border-bottom: 1px solid #ddd; padding-bottom: 15px;">
-    <h1>Target Search</h1>
+    <h1>Target Add</h1>
   </div>
   <div class="container text-center py-5">
     <form id="target_add_form">
 
       <!-- title -->
       <div class="row mb-3">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">title</label>
+        <label for="input_title" class="col-sm-2 col-form-label">title</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="inputEmail3" name="target_title">
+          <input type="text" class="form-control" id="input_title" name="target_title">
         </div>
       </div>
 
-      <!-- image upload -->
+      <!-- image upload -->  
       <div class="input-group mb-5">
-        <input type="file" class="form-control" id="inputGroupFile02">
-        <label class="input-group-text" for="inputGroupFile02">Upload</label>
+        <input type="file" class="form-control" id="inputGroupFile02" accept="image/*">
+        <label class="input-group-text" for="inputGroupFile02" id="upload_input_label">Upload</label>
+      </div>
+      <!-- preview image -->
+      <div id="preview_image">
+        
       </div>
 
       <!-- description -->
@@ -68,6 +73,45 @@
 </body>
 <script>
   $(document).ready(function() {
+    // $('#inputGroupFile02').change(function (e) {
+    //   console.log(e.target.files);
+    //   console.log(document.getElementById('inputGroupFile02').files[0]) 
+    //   console.log($('#inputGroupFile02')[0].files[0]) 
+    // })
+    
+    //  使用JQ的选择器无法获取到files属性
+    // - JQ的$('#inputGroupFile02')并不等于JS的document.getElementById('inputGroupFile02')
+    // - $('#inputGroupFile02')[0]等于JS的document.getElementById('inputGroupFile02')
+    $('#upload_input_label').click(function (e) {
+    
+      e.preventDefault()
+
+      // 获取图片资源
+      var image_file=document.getElementById('inputGroupFile02').files[0];
+      
+      const formData=new FormData();
+      formData.append('image',image_file)
+
+      $.ajax({
+        type:'POST',
+        url:'https://exercise-jovian-careers-websit--salmonpj.repl.co/api/v1/uploads',
+        data:formData,
+        processData:false,
+        contentType: false,
+        success: function(response) {
+                    console.log(response)
+                    console.log("image url:",response.image_url) 
+
+                    var img = document.createElement('img');
+                    img.src = `${response.image_url}`;
+                    $("#preview_image")[0].appendChild(img)
+                },
+        error: function(xhr, status, error) {
+                    console.log(error)
+                }
+      })
+      
+    })
 
     // 定义一个函数来生成 "key point" 输入框的 HTML 模板
     function getKeyPointTemplate() {
@@ -117,7 +161,7 @@
 
       $.ajax({
         type: 'POST',
-        url: "https://exercise-jovian-careers-websit--salmonpj.repl.co/api/v1/target/target_add",
+        url: "https://exercise-jovian-careers-websit--salmonpj.repl.co/api/v1/year_target_detail_list",
         data: JSON.stringify(dataToSend),
         contentType: "application/json", // 指定请求的内容类型为 JSON
         dataType: 'json',
@@ -128,14 +172,11 @@
         success: function(response) {
           // 请求成功的回调函数
           console.log("服务器响应数据:", response);
-          alert("服务器响应数据:", response)
-
-          // 在这里处理服务器返回的数据
+        
         },
         error: function(jqXHR, textStatus, errorThrown) {
           // 请求失败的回调函数
           console.error("请求失败:", textStatus, errorThrown);
-          alert("请求失败:", textStatus, errorThrown)
         }
       })
     })

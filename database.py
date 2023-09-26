@@ -22,11 +22,11 @@ def get_year_target_list():
 
   return result_dicts
 
-def get_year_target_by_id(id):
+def get_year_detail_target_by_id(id):
   # result_dicts = []
   with engine.connect() as conn:
     result = conn.execute(
-       text("SELECT * FROM year_target_detail WHERE id = :target_id"),
+       text("SELECT * FROM year_target_detail_list WHERE id = :target_id"),
       {"target_id": id}
     )
 
@@ -56,7 +56,7 @@ def get_year_target_by_title(title):
   # result_dicts = []
   with engine.connect() as conn:
     result = conn.execute(
-       text("SELECT * FROM year_target_detail WHERE title = :target_title"),
+       text("SELECT * FROM year_target_detail_list WHERE title = :target_title"),
       {"target_title": title}
     )
 
