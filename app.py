@@ -7,13 +7,14 @@ import os
 from flask_cors import CORS
 
 app = Flask(__name__)
-# CORS(app, resources={r"/uploads/*": {"origins": "https://my-blog-api-service.onrender.com","methods": ["GET", "POST"]}})
-CORS(app)
-# 启用CORS，允许所有来源的请求访问
-
-data = get_year_target_list()
 
 baseurl = '/api/v1'
+
+# CORS(app)
+# 启用CORS，允许所有来源的请求访问
+CORS(app, resources={f"{baseurl}/uploads/*": {"origins": "https://my-blog-api-service.onrender.com","methods": ["GET", "POST"]}})
+
+data = get_year_target_list()
 
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
