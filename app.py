@@ -14,6 +14,7 @@ baseurl = '/api/v1'
 # 启用CORS，允许所有来源的请求访问
 CORS(app, resources={f"{baseurl}/uploads/*": {"origins": "https://my-blog-api-service.onrender.com","methods": ["GET", "POST"]}})
 
+
 data = get_year_target_list()
 
 UPLOAD_FOLDER = 'uploads'

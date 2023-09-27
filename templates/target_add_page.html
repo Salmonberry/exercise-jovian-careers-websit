@@ -104,6 +104,8 @@
 
                     var img = document.createElement('img');
                     img.src = `${response.image_url}`;
+          
+                    $("#preview_image").empty()
                     $("#preview_image")[0].appendChild(img)
                 },
         error: function(xhr, status, error) {
