@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, abort, request,send_from_directory
+from flask import Flask, render_template, jsonify, abort, request, send_from_directory
 from database import get_year_target_list
 from database import get_year_detail_target_by_id
 from database import get_year_target_by_title
@@ -7,15 +7,16 @@ import os
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={r"/uploads/*": {"origins": "https://my-blog-api-service.onrender.com","methods": ["GET", "POST"]}})
-  # 启用CORS，允许所有来源的请求访问
+# CORS(app, resources={r"/uploads/*": {"origins": "https://my-blog-api-service.onrender.com","methods": ["GET", "POST"]}})
+CORS(app)
+# 启用CORS，允许所有来源的请求访问
 
 data = get_year_target_list()
 
 baseurl = '/api/v1'
 
-UPLOAD_FOLDER='uploads'
-app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route("/")
@@ -36,7 +37,8 @@ def to_target_detail_page(target_id):
 def to_target_search_page():
   return render_template('target_search_page.html')
 
-@app.route("/target/target_add_page",methods=["GET"])
+
+@app.route("/target/target_add_page", methods=["GET"])
 def to_add_target_page():
   return render_template('target_add_page.html')
 
@@ -46,7 +48,8 @@ def year_target_list():
   return jsonify(data)
 
 
-@app.route(f"{baseurl}/year_target_detail_list/<int:target_id>", methods=["GET"])
+@app.route(f"{baseurl}/year_target_detail_list/<int:target_id>",
+           methods=["GET"])
 def year_target(target_id):
   data = get_year_detail_target_by_id(id=target_id)
   return jsonify(data)
@@ -58,7 +61,7 @@ def get_target_by_name():
 
   if target_title is not None and target_title.strip() != "":
     data = get_year_target_by_title(title=target_title)
-  
+
     # return render_template('target_search_page.html', data=data)
     return jsonify(data)
 
@@ -68,37 +71,43 @@ def get_target_by_name():
 
 @app.route(f"{baseurl}/year_target_detail_list", methods=["POST"])
 def add_target_by_name():
-  data = request.get_json();
+  data = request.get_json()
   # print(data)
-  
-  return jsonify(data);
+
+  return jsonify(data)
   # if data is not None:
   #   title=
-  
+
+
 @app.route(f"{baseurl}/uploads", methods=["POST"])
 def uploaded_image():
   try:
-    upload_file=request.files['image']
-    if upload_file.filename !='':
+    upload_file = request.files['image']
+    if upload_file.filename != '':
       import datetime
-      timestamp=datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-      filename=timestamp+'_'+secure_filename(upload_file.filename)
-      upload_file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))      
+      timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+      filename = timestamp + '_' + secure_filename(upload_file.filename)
+      upload_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
       print(upload_file)
-      base_url=request.url_root
-      image_url=base_url+'uploads/'+filename
+      base_url = request.url_root
+      image_url = base_url + 'uploads/' + filename
 
-      return jsonify({'message': 'Image uploaded successfully ', 'image_url': image_url})
+      return jsonify({
+        'message': 'Image uploaded successfully ',
+        'image_url': image_url
+      })
     else:
       return jsonify({'message': 'No file selected'})
   except Exception as e:
-        return jsonify({'message': 'Error: ' + str(e)})
+    return jsonify({'message': 'Error: ' + str(e)})
+
 
 # 添加一个路由用于访问上传的图片
 @app.route('/uploads/<filename>')
 def send_uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+  return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 @app.errorhandler(404)
 def not_found_error(error):
