@@ -143,7 +143,7 @@
       e.preventDefault()
 
       var target_title = $('input[name="target_title"]').val();
-      var target_image = $('input[type="file"]').val();
+      var target_image = $("img").attr("src");
       var target_description = $('textarea[name="target_description').val();
       var target_summary = $('textarea[name="target_summary"]').val();
 
@@ -155,7 +155,7 @@
 
       var dataToSend = {
         target_title: target_title,
-        // target_image: target_image,
+        target_image: target_image,
         target_description: target_description,
         target_key_points: keyPoints,
         target_summary: target_summary,

@@ -82,3 +82,15 @@ def get_year_target_by_title(title):
   
   return target
 
+
+def add_year_target_to_db(data):
+  with engine.connect() as conn:
+    query=text("INSERT INTO applications (title, image_url, description, summary, key_point_list) VALUES (:title, :image_url, :description, :summary, :key_point_list)")
+    
+    conn.execute(query, 
+                 title=data['title'],
+                 image_url=data['image_url'],
+                 description=data['description'],
+                 summary=data['summary'],
+                 key_point_list=data['key_point_list'])
+

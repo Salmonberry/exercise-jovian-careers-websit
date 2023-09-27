@@ -10,9 +10,17 @@ app = Flask(__name__)
 
 baseurl = '/api/v1'
 
+# 设置允许跨域访问的源列表
+allowed_origins = [
+    "https://my-blog-api-service.onrender.com",
+    "https://exercise-jovian-careers-websit.salmonpj.repl.co"
+]
 # CORS(app)
 # 启用CORS，允许所有来源的请求访问
-CORS(app, resources={f"{baseurl}/uploads/*": {"origins": "https://my-blog-api-service.onrender.com","methods": ["GET", "POST"]}})
+CORS(app, resources={
+  f"{baseurl}/uploads/*": {"origins": allowed_origins,"methods": ["GET", "POST"]},
+  f"{baseurl}/year_target_detail_list": {"origins": allowed_origins,"methods": ["GET", "POST"]}
+})
 
 
 data = get_year_target_list()
