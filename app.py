@@ -1,7 +1,5 @@
 from flask import Flask, render_template, jsonify, abort, request, send_from_directory
-from database import get_year_target_list
-from database import get_year_detail_target_by_id
-from database import get_year_target_by_title
+from database import get_year_target_list,get_year_target_by_title,get_year_detail_target_by_id,add_year_target_to_db
 from werkzeug.utils import secure_filename
 import os
 from flask_cors import CORS
@@ -82,8 +80,7 @@ def get_target_by_name():
 @app.route(f"{baseurl}/year_target_detail_list", methods=["POST"])
 def add_target_by_name():
   data = request.get_json()
-  # print(data)
-
+  add_year_target_to_db(data)
   return jsonify(data)
   # if data is not None:
   #   title=
