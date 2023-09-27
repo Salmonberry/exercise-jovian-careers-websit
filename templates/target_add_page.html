@@ -103,6 +103,8 @@
                     console.log("image url:",response.image_url) 
 
                     var img = document.createElement('img');
+                    img.id = 'preview';
+          
                     img.src = `${response.image_url}`;
           
                     $("#preview_image").empty()
@@ -143,10 +145,9 @@
       e.preventDefault()
 
       var target_title = $('input[name="target_title"]').val();
-      var target_image = $("img").attr("src");
+      var target_image = $("#preview").attr("src");
       var target_description = $('textarea[name="target_description').val();
       var target_summary = $('textarea[name="target_summary"]').val();
-
 
       // 选择所有带有 name="key_point" 的 input 元素
       var keyPoints = $('input[name="key_point"]').map(function() {

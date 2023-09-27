@@ -48,35 +48,37 @@
             console.log(data);
                 console.log($('#target_search_results'));
 
-                // 创建一个 ul 元素
-                var ul = $('<ul>').addClass('list-group');
+               // 创建一个 ul 元素
+var ul = $('<ul>').addClass('list-group');
 
-                // 创建 li 元素并添加数据
-                var titleLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center')
-                                       .text(data['title'])
-                                       .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
-                var descriptionLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center')
-                                             .text(data['description'])
-                                             .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
-                var imageUrlLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center disabled')
-                                         .text(data['image_url'])
-                                         .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
-                var keyPointsUl = $('<ul>');
-                for (let item of data['key_point_list']) {
-                    keyPointsUl.append($('<li>').text(item));
-                }
-                var keyPointsLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center disabled')
-                                           .append(keyPointsUl)
-                                           .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
-                var summaryLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center disabled')
-                                        .text(data['summary'])
-                                        .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
+// 创建 li 元素并添加数据
+var titleLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center')
+                       .text(data['title'])
+                       .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
+var descriptionLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center')
+                             .text(data['description'])
+                             .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
+var imageUrlLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center disabled');
+// 创建一个 <img> 标签来渲染图片
+var imageTag = $('<img>').attr('src', data['image_url']).addClass('img-fluid');
+imageUrlLi.append(imageTag); // 将 <img> 标签添加到 <li>
+imageUrlLi.append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
+var keyPointsUl = $('<ul>');
+for (let item of data['key_point_list']) {
+    keyPointsUl.append($('<li>').text(item));
+}
+var keyPointsLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center disabled')
+                           .append(keyPointsUl)
+                           .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
+var summaryLi = $('<li>').addClass('list-group-item d-flex justify-content-between align-items-center disabled')
+                        .text(data['summary'])
+                        .append($('<span>').addClass('badge bg-secondary badge-pill').text('Edit'));
 
-                // 将 li 元素添加到 ul 元素中
-                ul.append(titleLi, descriptionLi, imageUrlLi, keyPointsLi, summaryLi);
+// 将 li 元素添加到 ul 元素中
+ul.append(titleLi, descriptionLi, imageUrlLi, keyPointsLi, summaryLi);
 
-                // 将 ul 元素插入到目标元素中
-                $('#target_search_results').html(ul);
+// 将 ul 元素插入到目标元素中
+$('#target_search_results').html(ul);
 
           }
 
