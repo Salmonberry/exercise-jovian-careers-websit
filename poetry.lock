@@ -45,6 +45,17 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flask-cors"
+version = "4.0.0"
+description = "A Flask extension adding a decorator for CORS support"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Flask = ">=0.9"
+
+[[package]]
 name = "greenlet"
 version = "2.0.2"
 description = "Lightweight in-process concurrent programming"
@@ -147,13 +158,14 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "036357384e2c1181c6ffdb1662d7fd3c114d87ac493fe3d8320e15e341dfa6bc"
+content-hash = "d60b34d9450714dbac97f9b60bff61f4cc8479afb6af29e8fd727f81a111a993"
 
 [metadata.files]
 blinker = []
 click = []
 colorama = []
 flask = []
+flask-cors = []
 greenlet = []
 itsdangerous = []
 jinja2 = []
