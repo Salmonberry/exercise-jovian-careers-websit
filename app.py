@@ -7,7 +7,7 @@ import os
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "https://my-blog-api-service.onrender.com"}})
+CORS(app, resources={r"/uploads/*": {"origins": "https://my-blog-api-service.onrender.com","methods": ["GET", "POST"]}})
   # 启用CORS，允许所有来源的请求访问
 
 data = get_year_target_list()
