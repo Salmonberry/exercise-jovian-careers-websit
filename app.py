@@ -94,7 +94,7 @@ def uploaded_image():
 
 # 添加一个路由用于访问上传的图片
 @app.route('/uploads/<filename>')
-def uploaded_file(filename):
+def send_uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.errorhandler(404)
