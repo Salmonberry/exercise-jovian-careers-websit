@@ -88,10 +88,57 @@ def add_year_target_to_db(data):
     query=text("INSERT INTO year_target_detail_list (title, image_url, description, summary, key_point_list) VALUES (:title, :image_url, :description, :summary, :key_point_list)")
     
     conn.execute(query, {
-    'title': data['target_title'],
-    'image_url': data['target_image'],
-    'description': data['target_description'],
-    'summary': data['target_summary'],
-    'key_point_list': json.dumps(data['target_key_points'])
+    'title': data['title'],
+    'image_url': data['image_url'],
+    'description': data['description'],
+    'summary': data['summary'],
+    'key_point_list': json.dumps(data['key_point_list'])
   })
+
+
+def update_year_target_in_db(data, target_id):
+    with engine.connect() as conn:
+        query = text("UPDATE year_target_detail_list SET "
+                     "title = :title, "
+                     "image_url = :image_url, "
+                     "description = :description, "
+                     "summary = :summary, "
+                     "key_point_list = :key_point_list "
+                     "WHERE id = :target_id")
+    
+        conn.execute(query, {
+            'title': data['title'],
+            'image_url': data['image_url'],
+            'description': data['description'],
+            'summary': data['summary'],
+            'key_point_list': json.dumps(data['key_point_list']),
+            'target_id': target_id
+        })
+
+def modify_year_detail_target_in_db(data,target_id):
+  
+  with engine.connect() as conn:
+        query = text("UPDATE year_target_detail_list SET "+",".join([f"{key}=:{key}" for key in data])+
+                     " WHERE id = :target_id")
+    
+        data['target_id']=target_id
+    
+        if 'key_point_list' in data:
+          data['key_point_list'] = json.dumps(data['key_point_list'])
+          
+        conn.execute(query, data)
+  
+
+def delete_year_target_by_id(target_id):
+    with engine.connect() as conn:
+        query = text("DELETE FROM year_target_detail_list WHERE id = :target_id")
+    
+        result = conn.execute(query, parameters={'target_id':target_id})
+        
+        # 检查是否成功删除记录
+        if result.rowcount == 1:
+            return True  # 表示成功删除记录
+        else:
+            return False  # 表示未找到匹配的记录或删除失败
+
 
