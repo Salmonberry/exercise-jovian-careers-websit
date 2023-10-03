@@ -16,13 +16,14 @@
       <div class="container text-center">
         <div class="row justify-content-between">
             <div class="col-2">
+                <input type="file" id="file-input" style="display:none;">
                 <button type="button" class="btn btn-secondary" id="upload-button">
                   <span class="bi bi-cloud-upload-fill d-inline ps-4"></span>
-                    Upload Files...
+                  Upload Files...
                 </button>
             </div>
             <div class="col-2">
-                <button type="button" class="btn btn-info">
+                <button type="button" class="btn btn-info" id="refresh-button">
                   <span class="bi bi-arrow-clockwise d-inline pr-4"></span>
                     Refresh
                 </button>
@@ -33,9 +34,9 @@
         <div class="list-group-item list-group-item-action list-group-item-dark" aria-current="true">
           File Title
         </div>
-
-        {%for item in data %}
-          <div class="list-group-item list-group-item-action">
+        <div id="file-item-group">
+           {%for item in data %}
+          <div class="list-group-item list-group-item-action list-item">
           <div class="row justify-content-between">
             <div class="col-8">
               <div class=""container text-center">
@@ -70,30 +71,26 @@
           
         </div>
         {%endfor%}
-        
-        
+        </div>
       </div>
     </div>
     </div>
   </div>
   <script>
     $(document).ready(function() {
-      const labelTexts = document.querySelectorAll('.label-text');
-      const editableFields = document.querySelectorAll('editableField');
-      const deleteButtons=document.querySelectorAll('.delete-button')
+       fileItemGroup=document.getElementById('file-item-group');
+       fileItemGroupChildren = Array.from(fileItemGroup.children);
+       const fileInput = $('#file-input');
 
-      $("#upload-button").click(function (params) {
-        console.log("ddddd")
-      })
+      fileItemGroupChildren.forEach((item,index)=>{
+         const deleteButton = item.querySelector('.delete-button');
+         const labelText = item.querySelector('.label-text');
+         const editableField = item.querySelector('.editableField');
 
-      $('.label-text').click(function (params) {
-        console.log("ddddd")
-      })
+         deleteButton.addEventListener('click',function(){
 
-      deleteButtons.forEach((button)=>{
-        button.addEventListener('click',()=>{
-          //获取文件名
-          const fileNameToDelete = button.getAttribute('data-file-name');
+            //获取文件名
+          const fileNameToDelete = deleteButton.getAttribute('data-file-name');
 
            // 调用删除的API，删除当
           $.ajax({
@@ -105,70 +102,104 @@
 
             // 更新页面数据
             // 例如，可以从页面中移除已删除的文件项
-            const listItemToRemove = document.getElementById(fileNameToDelete);
+            // 假设要删除的文件名为 fileNameToDelete
+              console.log(fileItemGroupChildren.length);
+              
+              data={
+                count:fileItemGroupChildren.length,
+                list:fileItemGroupChildren
+              }
+              
+              fileItemGroupChildren[index].remove();
               
             },
             error:function (error) {
               //处理错误
-              console.error('Error:',error)
+              console.error('Error:',error);
             }
           })
+        })
+
+         labelText.addEventListener('click',function () {
+           
+            labelText.style.display = 'none';
+            editableField.style.display = 'inline-block';
+            editableField.value = labelText.innerText.trim();
+            editableField.focus();
+           
+         })
+
+
+        editableField.addEventListener('blur',function () {
           
+           const originName = labelText.innerText.trim();
+           labelText.style.display = 'inline-block';
+           editableField.style.display = 'none';
+           labelText.innerText = editableField.value;
+
+           const requestData = {
+             
+              origin_name: originName,
+              rename: editableField.value
+             
+            };
+
+      if (requestData.origin_name !== requestData.rename) {
+        // Send data to the server to save the changes
+        $.ajax({
+          url: 'https://exercise-jovian-careers-websit--salmonpj.repl.co/api/v1/uploads',
+          type: 'PUT',
+          contentType: 'application/json',
+          data: JSON.stringify(requestData),
+          success: function(response) {
+            // Handle success response
+            console.log(response);
+          },
+          error: function(error) {
+            // Handle error response
+            console.error('Error:', error);
+          }
+        });
+      }
         })
       })
 
-      labelTexts.forEach((label,index)=>{
-         label.addEventListener('click', function() => {
-           
-           console.log("dddddddd")
-           label.style.display = 'none';
-           editableFields[index].style.display='inline-block';
-           editableFields[index].value= label.innerText.trim();
-           editableFields[index].focus();
-           
-            // editableField.style.display = 'inline-block';
-            // editableField.value = labelText.innerText.trim();
-            // editableField.focus();
-        });
+      $('#refresh-button').click(()=> {
+        // 刷新页面并强制从服务器重新加载页面（忽略浏览器缓存）
+        location.reload(true);
       })
 
-      editableFields.forEach((button,index)=>{
+      $('#upload-button').click(()=> {
+        fileInput.click();
+      });
 
-            button.addEventListener('blur', function() => {
+      fileInput.change(()=>{
+        const selectedFile=fileInput[0].files[0];
 
-            console.log("eeeeeeeeeeeee")
-            const origin_name =labelTexts[index].innerText.trim();
-          
-            labelTexts[index].style.display = 'inline-block';
-            button.style.display = 'none';
-            labelTexts[index].innerText = button.value;
+        if (selectedFile) {
+                  // 这里可以处理上传操作，例如使用AJAX上传文件到服务器
+        console.log(`Selected File: ${selectedFile.name}`);
+        // 清空文件选择框，以便下次选择
+        fileInput.val('');
 
-          const requestData={
-            origin_name:origin_name,
-            rename:button.value
-          }
+         const formData=new FormData();
+      formData.append('image',selectedFile)
 
-          console.log(requestData)
-
-          if(requestData.origin_name!=requestData.rename){
-            //将data发送到服务器以保存更改
-          $.ajax({
-        url: 'https://exercise-jovian-careers-websit--salmonpj.repl.co/api/v1/uploads', // 服务器端处理更新的URL
-        type: 'PUT', // 使用PUT请求
-        contentType: 'application/json', // 请求的数据类型为JSON
-        data: JSON.stringify(requestData), // 将数据对象转为JSON字符串
+      $.ajax({
+        type:'POST',
+        url:'https://exercise-jovian-careers-websit--salmonpj.repl.co/api/v1/uploads',
+        data:formData,
+        processData:false,
+        contentType: false,
         success: function(response) {
-            // 处理成功的响应
-            console.log(response);
-        },
-        error: function(error) {
-            // 处理错误
-            console.error('Error:', error);
+                    // alert("image url:",response.image_url);
+                     // location.reload(true
+                },
+        error: function(xhr, status, error) {
+                    console.log(error)
+                }
+      });
         }
-    });
-          }
-        });
-        
       })
       
     })
